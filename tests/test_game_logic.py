@@ -17,7 +17,7 @@ def test_guess_too_low():
 # Root cause: app.py was passing str(secret) on even attempts, triggering a
 # TypeError fallback that did lexicographic string comparison and flipped the
 # direction. Fix: always pass secret as int. These tests lock in correct direction.
-
+# All fixed.
 def test_too_high_message_says_go_lower():
     # Guess 60, secret 50 → player guessed too HIGH → must say "Go LOWER"
     outcome, message = check_guess(60, 50)

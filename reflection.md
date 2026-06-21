@@ -39,13 +39,14 @@ The AI helped me design those tests by explaining that checking only the outcome
 
 ## 4. What did you learn about Streamlit and state?
 
-- How would you explain Streamlit "reruns" and session state to a friend who has never used Streamlit?
+Every time you interact with a Streamlit app — clicking a button, typing in a text box — the entire Python script reruns from top to bottom. Think of it like refreshing a page: all your local variables reset to their starting values. `st.session_state` is the fix for this — it is a dictionary that survives across reruns, so any value you store in it (like the secret number, attempt count, or game status) stays in memory instead of being wiped. This is why the New Game bug was so subtle: the script was resetting `attempts` in session state but not `status`, so even though the page reran, the "won" status persisted and the `st.stop()` call halted the game before any input was possible.
 
 ---
 
 ## 5. Looking ahead: your developer habits
 
-- What is one habit or strategy from this project that you want to reuse in future labs or projects?
-  - This could be a testing habit, a prompting strategy, or a way you used Git.
-- What is one thing you would do differently next time you work with AI on a coding task?
-- In one or two sentences, describe how this project changed the way you think about AI generated code.
+One habit I want to reuse is writing tests that check the *message content*, not just the outcome label. In this project, the original tests only checked that `check_guess` returned `"Too High"` or `"Too Low"`, which would have passed even with the backwards hints bug active — because the outcome string was correct but the direction word in the message was wrong. Asserting on the actual user-facing string caught the real problem.
+
+One thing I would do differently next time is verify changes in the code myself before telling the AI something is fixed. Early in this project I said the hints bug was fixed when the code was actually unchanged, and the AI briefly moved on. Reading the diff before reporting a fix would prevent that kind of confusion.
+
+AI-generated code looks correct at a glance but can hide subtle logic errors — like passing a string instead of an integer — that only surface under specific conditions. This project changed how I read AI code: I now treat it as a first draft that needs careful review rather than finished, production-ready output.

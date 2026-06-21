@@ -25,28 +25,42 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📝 Document Your Experience
 
-- [ ] Describe the game's purpose.
-- [ ] Detail which bugs you found.
-- [ ] Explain what fixes you applied.
+**Game purpose:** A number guessing game built with Streamlit where the player tries to guess a secret number within a limited number of attempts. The difficulty setting controls the number range (Easy: 1–20, Normal: 1–100, Hard: 1–50) and attempt limit.
+
+**Bugs found:**
+1. Hints were backwards — guessing too high showed "Go HIGHER!" instead of "Go LOWER!" (caused by alternating `str(secret)` on even attempts, triggering a bad string comparison fallback)
+2. "New Game" button did not reset `status`, `score`, or `history` — the game stayed in a "won" state and blocked all input
+3. Info banner always showed "between 1 and 100" regardless of difficulty (hardcoded instead of using the `low`/`high` variables)
+
+**Fixes applied:**
+1. Removed the `str(secret)` alternation — `check_guess` now always receives two integers
+2. Added `status`, `score`, and `history` resets to the New Game handler
+3. Changed the info banner to use `{low}` and `{high}` dynamically
+4. Refactored `get_range_for_difficulty`, `parse_guess`, `check_guess`, and `update_score` out of `app.py` and into `logic_utils.py`
 
 ## 📸 Demo Walkthrough
 
-Describe your fixed game in numbered steps so a reader can follow along without watching a video:
-
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
-
-**Screenshot** *(optional)*: <!-- Insert a screenshot of your fixed, winning game here -->
+1. Player opens the app on **Normal** difficulty (1–100, 8 attempts). The info banner correctly shows "Guess a number between 1 and 100. Attempts left: 8".
+2. Player enters **50** and clicks Submit → hint shows "📈 Go HIGHER!" meaning the secret is above 50. Attempts left drops to 7.
+3. Player enters **75** → hint shows "📉 Go LOWER!" meaning the secret is between 50 and 75. Attempts left: 6.
+4. Player enters **62** → "📈 Go HIGHER!". Attempts left: 5.
+5. Player enters **68** → "📉 Go LOWER!". Attempts left: 4.
+6. Player enters **65** → "🎉 Correct!" — balloons appear, score displayed, game status set to "won".
+7. Player clicks **New Game** → game fully resets (attempts back to 8, new secret generated, score cleared) and is immediately playable again.
 
 ## 🧪 Test Results
 
 ```
-# Paste your pytest output here, e.g.:
-# pytest tests/
-# ========================= X passed in 0.XXs =========================
+(AIvenv) fatimahhassan@Fatimahs-MBP ai110-module1show-gameglitchinvestigator-starter % python -m pytest
+====================================================== test session starts =======================================================
+platform darwin -- Python 3.13.0, pytest-9.0.3, pluggy-1.6.0
+rootdir: /Users/fatimahhassan/Documents/CodePath/AI_110/ai110-module1show-gameglitchinvestigator-starter
+plugins: anyio-4.13.0
+collected 6 items
+
+tests/test_game_logic.py ......                                                                                            [100%]
+
+======================================================= 6 passed in 0.01s ========================================================
 ```
 
 ## 🚀 Stretch Features
